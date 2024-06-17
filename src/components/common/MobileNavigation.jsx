@@ -7,6 +7,7 @@ import UserNav from '@/views/account/components/UserAvatar';
 import Badge from './Badge';
 import FiltersToggle from './FiltersToggle';
 import SearchBar from './SearchBar';
+import { ShoppingOutlined } from '@ant-design/icons';
 
 const Navigation = (props) => {
   const {
@@ -23,7 +24,7 @@ const Navigation = (props) => {
       <div className="mobile-navigation-main">
         <div className="mobile-navigation-logo">
           <Link onClick={onClickLink} to={HOME}>
-            <h2>SALINAKA</h2>
+            <h2>TOS</h2>
           </Link>
         </div>
 
@@ -37,7 +38,8 @@ const Navigation = (props) => {
             >
 
               <Badge count={basketLength}>
-                <i className="fa fa-shopping-bag" style={{ fontSize: '2rem' }} />
+              <ShoppingOutlined style={{ fontSize: '2.4rem' }} />
+               
               </Badge>
             </button>
           )}

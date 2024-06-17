@@ -15,7 +15,7 @@ const ColorChooser = ({ availableColors, onSelectedColorChange }) => {
           className={selectedColor === color ? 'color-item color-item-selected' : 'color-item'}
           key={color}
           onClick={() => setColor(color)}
-          style={{ backgroundColor: color }}
+          
           role="presentation"
         />
       ))}

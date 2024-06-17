@@ -9,6 +9,7 @@ const CustomMobileInput = (props) => {
   const { label, placeholder, defaultValue } = props;
   const { touched, error } = meta;
   const { setValue } = helpers;
+  const MyPhoneInput = PhoneInput.default ? PhoneInput.default : PhoneInput
 
   const handleChange = (value, data) => {
     const mob = {
@@ -28,9 +29,9 @@ const CustomMobileInput = (props) => {
       ) : (
         <label className="label-input" htmlFor={field.name}>{label}</label>
       )}
-      <PhoneInput
+      <MyPhoneInput
         name={field.name}
-        country="ph"
+        country="np"
         inputClass="input-form d-block"
         style={{
           border: touched && error ? '1px solid red' : '1px solid #cacaca'
@@ -46,7 +47,7 @@ const CustomMobileInput = (props) => {
 
 CustomMobileInput.defaultProps = {
   label: 'Mobile Number',
-  placeholder: '09254461351'
+  placeholder: '1234567890'
 };
 
 CustomMobileInput.propTypes = {

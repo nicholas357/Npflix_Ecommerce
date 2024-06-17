@@ -5,13 +5,13 @@ import { FEATURED_PRODUCTS, RECOMMENDED_PRODUCTS, SHOP } from '@/constants/route
 import {
   useDocumentTitle, useFeaturedProducts, useRecommendedProducts, useScrollTop
 } from '@/hooks';
-import bannerImg from '@/images/banner-girl.png';
+import bannerImg from '@/images/banner-girl-1.gif';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 
 const Home = () => {
-  useDocumentTitle('Salinaka | Home');
+  useDocumentTitle('TOS | Home');
   useScrollTop();
 
   const {
@@ -33,13 +33,12 @@ const Home = () => {
         <div className="banner">
           <div className="banner-desc">
             <h1 className="text-thin">
-              <strong>See</strong>
-              &nbsp;everything with&nbsp;
+              <strong>Shop</strong>
+              &nbsp;with digital&nbsp;
               <strong>Clarity</strong>
             </h1>
             <p>
-              Buying eyewear should leave you happy and good-looking, with money in your pocket.
-              Glasses, sunglasses, and contacts—we’ve got your eyes covered.
+            Discover digital deals that leave you satisfied and savvy, without breaking the bank. From software to subscriptions, we've got your needs covered with unbeatable clarity and affordability.
             </p>
             <br />
             <Link to={SHOP} className="button">
@@ -47,7 +46,7 @@ const Home = () => {
               <ArrowRightOutlined />
             </Link>
           </div>
-          <div className="banner-img"><img src={bannerImg} alt="" /></div>
+          <div className="banner-img"><img src={bannerImg} alt="" style={{ borderRadius: '100px', width: '110%', height: '100%', objectFit: 'cover' }}/></div>
         </div>
         <div className="display">
           <div className="display-header">

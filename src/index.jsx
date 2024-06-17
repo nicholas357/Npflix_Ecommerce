@@ -10,6 +10,7 @@ import WebFont from 'webfontloader';
 import App from './App';
 import firebase from '@/services/firebase';
 
+
 WebFont.load({
   google: {
     families: ['Tajawal']

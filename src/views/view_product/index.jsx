@@ -14,6 +14,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Select from 'react-select';
 
+
+
 const ViewProduct = () => {
   const { id } = useParams();
   const { product, isLoading, error } = useProduct(id);
@@ -47,12 +49,14 @@ const ViewProduct = () => {
       colorOverlay.current.value = color;
     }
   };
+ 
 
   const handleAddToBasket = () => {
     addToBasket({ ...product, selectedColor, selectedSize: selectedSize || product.sizes[0] });
   };
 
   return (
+    
     <main className="content">
       {isLoading && (
         <div className="loader">
@@ -108,16 +112,17 @@ const ViewProduct = () => {
               <div className="divider" />
               <br />
               <div>
-                <span className="text-subtle">Lens Width and Frame Size</span>
+                <span className="text-subtle">Product Size</span>
                 <br />
                 <br />
                 <Select
                   placeholder="--Select Size--"
                   onChange={onSelectedSizeChange}
-                  options={product.sizes.sort((a, b) => (a < b ? -1 : 1)).map((size) => ({ label: `${size} mm`, value: size }))}
+                  options={product.sizes.sort((a, b) => (a < b ? -1 : 1)).map((size) => ({ label: `${size} screen`, value: size }))}
                   styles={{ menu: (provided) => ({ ...provided, zIndex: 10 }) }}
                 />
               </div>
+              
               <br />
               {product.availableColors.length >= 1 && (
                 <div>
@@ -134,11 +139,15 @@ const ViewProduct = () => {
               <div className="product-modal-action">
                 <button
                   className={`button button-small ${isItemOnBasket(product.id) ? 'button-border button-border-gray' : ''}`}
-                  onClick={handleAddToBasket}
+                  onClick={() => {
+                    handleAddToBasket();
+                    handleAddToWishlist();
+                  }}
                   type="button"
                 >
                   {isItemOnBasket(product.id) ? 'Remove From Basket' : 'Add To Basket'}
                 </button>
+                
               </div>
             </div>
           </div>

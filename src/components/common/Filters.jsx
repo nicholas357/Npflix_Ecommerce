@@ -93,10 +93,9 @@ const Filters = ({ closeModal }) => {
             onChange={onBrandFilterChange}
           >
             <option value="">All Brands</option>
-            <option value="salt">Salt Maalat</option>
-            <option value="betsin">Betsin Maalat</option>
-            <option value="black">Black Kibal</option>
-            <option value="sexbomb">Sexbomb</option>
+            <option value="Digital">Digital</option>
+            <option value="Furniture">Furnituret</option>
+            
           </select>
         )}
       </div>

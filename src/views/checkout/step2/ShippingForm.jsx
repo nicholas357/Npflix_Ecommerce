@@ -38,6 +38,7 @@ const ShippingForm = () => {
               placeholder="Enter full shipping address"
               component={CustomInput}
             />
+            
           </div>
           <div className="d-block checkout-field">
             <CustomMobileInput name="mobile" defaultValue={values.mobile} />
@@ -70,10 +71,10 @@ const ShippingForm = () => {
                   />
                   <label className="d-flex w-100" htmlFor={field.name}>
                     <h5 className="d-flex-grow-1 margin-0">
-                      &nbsp; International Shipping &nbsp;
-                      <span className="text-subtle">7-14 days</span>
+                      &nbsp; Instant Shipping &nbsp;
+                      <span className="text-subtle">5-10 mins</span>
                     </h5>
-                    <h4 className="margin-0">$50.00</h4>
+                    <h4 className="margin-0">NPR 100.00</h4>
                   </label>
                 </div>
               </div>

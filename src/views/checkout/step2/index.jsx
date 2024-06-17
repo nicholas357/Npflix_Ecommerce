@@ -13,8 +13,8 @@ import { setShippingDetails } from '@/redux/actions/checkoutActions';
 import * as Yup from 'yup';
 import { StepTracker } from '../components';
 import withCheckout from '../hoc/withCheckout';
-import ShippingForm from './ShippingForm';
-import ShippingTotal from './ShippingTotal';
+import ShippingForm from './ShippingForm'; // Import ShippingForm statically
+import ShippingTotal from './ShippingTotal'; // Import ShippingTotal statically
 
 const FormSchema = Yup.object().shape({
   fullname: Yup.string()
@@ -31,15 +31,15 @@ const FormSchema = Yup.object().shape({
       country: Yup.string(),
       countryCode: Yup.string(),
       dialCode: Yup.string().required('Mobile number is required'),
-      value: Yup.string().required('Mobile number is required')
+      value: Yup.string().required('Mobile number is required'),
     })
     .required('Mobile number is required.'),
   isInternational: Yup.boolean(),
-  isDone: Yup.boolean()
+  isDone: Yup.boolean(),
 });
 
 const ShippingDetails = ({ profile, shipping, subtotal }) => {
-  useDocumentTitle('Check Out Step 2 | Salinaka');
+  useDocumentTitle('Check Out Step 2 | TOS');
   useScrollTop();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -50,18 +50,20 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
     address: shipping.address || profile.address || '',
     mobile: shipping.mobile || profile.mobile || {},
     isInternational: shipping.isInternational || false,
-    isDone: shipping.isDone || false
+    isDone: shipping.isDone || false,
   };
 
   const onSubmitForm = (form) => {
-    dispatch(setShippingDetails({
-      fullname: form.fullname,
-      email: form.email,
-      address: form.address,
-      mobile: form.mobile,
-      isInternational: form.isInternational,
-      isDone: true
-    }));
+    dispatch(
+      setShippingDetails({
+        fullname: form.fullname,
+        email: form.email,
+        address: form.address,
+        mobile: form.mobile,
+        isInternational: form.isInternational,
+        isDone: true,
+      })
+    );
     history.push(CHECKOUT_STEP_3);
   };
 
@@ -71,20 +73,14 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
         <StepTracker current={2} />
         <div className="checkout-step-2">
           <h3 className="text-center">Shipping Details</h3>
-          <Formik
-            initialValues={initFormikValues}
-            validateOnChange
-            validationSchema={FormSchema}
-            onSubmit={onSubmitForm}
-          >
-            {() => (
+          <Formik initialValues={initFormikValues} validateOnChange validationSchema={FormSchema} onSubmit={onSubmitForm}>
+            {({ values, errors, touched }) => (
               <Form>
-                <ShippingForm />
+                <ShippingForm values={values} errors={errors} touched={touched} /> {/* Pass formik props to ShippingForm */}
                 <br />
-                {/*  ---- TOTAL --------- */}
-                <ShippingTotal subtotal={subtotal} />
+                <ShippingTotal subtotal={subtotal} /> {/* Use imported ShippingTotal */}
                 <br />
-                {/*  ----- NEXT/PREV BUTTONS --------- */}
+                {/*  ----- NEXT/PREV BUTTONS --------- */}
                 <div className="checkout-shipping-action">
                   <button
                     className="button button-muted"
@@ -95,10 +91,7 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
                     &nbsp;
                     Go Back
                   </button>
-                  <button
-                    className="button button-icon"
-                    type="submit"
-                  >
+                  <button className="button button-icon" type="submit">
                     Next Step
                     &nbsp;
                     <ArrowRightOutlined />

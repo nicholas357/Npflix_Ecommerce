@@ -17,7 +17,9 @@
     "test": "cross-env NODE_ENV=test jest --config=jest.config.json"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.24.7",
     "@vitejs/plugin-react": "^2.0.0",
+    "babel-eslint": "^10.1.0",
     "copy-webpack-plugin": "^8.1.1",
     "cross-env": "^7.0.3",
     "css-loader": "^5.2.4",
@@ -30,6 +32,7 @@
     "eslint-loader": "^4.0.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-promise": "^6.2.0",
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.2.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
@@ -63,6 +66,7 @@
     "react": "^17.0.2",
     "react-compound-slider": "^3.3.1",
     "react-dom": "^17.0.2",
+    "react-facebook": "^9.0.12",
     "react-loading-skeleton": "^2.2.0",
     "react-modal": "^3.13.1",
     "react-phone-input-2": "^2.14.0",

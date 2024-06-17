@@ -64,7 +64,6 @@ class Firebase {
 
     return user.reauthenticateWithCredential(cred);
   };
-
   updateEmail = (currentPassword, newEmail) =>
     new Promise((resolve, reject) => {
       this.reauthenticate(currentPassword)
@@ -162,6 +161,8 @@ class Firebase {
     });
   };
 
+  
+
   searchProducts = (searchKey) => {
     let didTimeout = false;
 
@@ -249,6 +250,11 @@ class Firebase {
 
   generateKey = () => this.db.collection("products").doc().id;
 
+  Orders = (id, order) =>
+    this.db.collection("orders").doc(id).set(order);
+
+  generateKey = () => this.db.collection("orders").doc().id;
+
   storeImage = async (id, folder, imageFile) => {
     const snapshot = await this.storage.ref(folder).child(id).put(imageFile);
     const downloadURL = await snapshot.ref.getDownloadURL();
@@ -265,5 +271,12 @@ class Firebase {
 }
 
 const firebaseInstance = new Firebase();
+const createOrder = async (orderData) => {
+  const ordersCollection = firebaseInstance.db.collection("orders");
+  const newOrderRef = ordersCollection.doc(); // Generate a new document reference
+  await newOrderRef.set(orderData);
+  return newOrderRef.id; // Return the generated order ID
+};
 
+export {createOrder};
 export default firebaseInstance;

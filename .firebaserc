@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "salinaka-ecommerce"
-  }
+    "default": "tos-shop-a5b92",
+    "hosting": "tos-shop-a5b92"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }
