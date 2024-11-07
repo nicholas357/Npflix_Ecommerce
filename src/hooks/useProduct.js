@@ -1,10 +1,9 @@
-import { useDidMount } from '@/hooks';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import firebase from '@/services/firebase';
+import { useDidMount } from '@/hooks';
 
 const useProduct = (id) => {
-  // get and check if product exists in store
   const storeProduct = useSelector((state) => state.products.items.find((item) => item.id === id));
 
   const [product, setProduct] = useState(storeProduct);
@@ -13,7 +12,7 @@ const useProduct = (id) => {
   const didMount = useDidMount(true);
 
   useEffect(() => {
-    (async () => {
+    const fetchProduct = async () => {
       try {
         if (!product || product.id !== id) {
           setLoading(true);
@@ -36,7 +35,9 @@ const useProduct = (id) => {
           setError(err?.message || 'Something went wrong.');
         }
       }
-    })();
+    };
+
+    fetchProduct();
   }, [id]);
 
   return { product, isLoading, error };

@@ -5,13 +5,24 @@ import { FEATURED_PRODUCTS, RECOMMENDED_PRODUCTS, SHOP } from '@/constants/route
 import {
   useDocumentTitle, useFeaturedProducts, useRecommendedProducts, useScrollTop
 } from '@/hooks';
-import bannerImg from '@/images/banner-girl-1.gif';
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import Cat from '@/components/common/Category/Cat';
+import { ProductGrid } from '@/components/product';
+import Bottomnav from '@/components/common/Bottomnav';
 
+const images = [
+  "https://i.imgur.com/73bLbbH.png",
+  "https://i.imgur.com/l4wA3pJ.png",
+  "https://i.imgur.com/BeBPn2i.png",
+  "https://i.imgur.com/7k8nqxD.png",
+  "https://i.imgur.com/OEg2I5o.jpeg",
+  "https://i.imgur.com/IDICYfe.png",
+  "https://i.imgur.com/Yq6JUjA.png",
+];
 
 const Home = () => {
-  useDocumentTitle('TOS | Home');
+  useDocumentTitle('OTTFLIX | Home');
   useScrollTop();
 
   const {
@@ -20,6 +31,7 @@ const Home = () => {
     isLoading: isLoadingFeatured,
     error: errorFeatured
   } = useFeaturedProducts(6);
+
   const {
     recommendedProducts,
     fetchRecommendedProducts,
@@ -27,31 +39,110 @@ const Home = () => {
     error: errorRecommended
   } = useRecommendedProducts(6);
 
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const nextSlide = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  };
+
+  // Automatically slide images every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(nextSlide, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Memoized current image to avoid re-renders
+  const currentImage = useMemo(() => images[currentIndex], [currentIndex]);
+
   return (
-    <main className="content">
-      <div className="home">
-        <div className="banner">
-          <div className="banner-desc">
-            <h1 className="text-thin">
-              <strong>Shop</strong>
-              &nbsp;with digital&nbsp;
-              <strong>Clarity</strong>
-            </h1>
-            <p>
-            Discover digital deals that leave you satisfied and savvy, without breaking the bank. From software to subscriptions, we've got your needs covered with unbeatable clarity and affordability.
-            </p>
-            <br />
-            <Link to={SHOP} className="button">
-              Shop Now &nbsp;
-              <ArrowRightOutlined />
-            </Link>
+    <>
+      <style>
+        {`
+          .banner {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            height: 400px;
+            cursor: pointer;
+            will-change: transform;
+          }
+
+          .banner-images {
+            display: flex;
+            transition: transform 1.5s ease;
+            width: 100%;
+            height: 100%;
+            transform: translateX(-${currentIndex * 100}%);
+          }
+
+          .banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            flex: 0 0 auto;
+          }
+
+          .buttonss-container {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            outline: none;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+          }
+
+          .buttonss {
+            background-color: rgba(255, 255, 255, 0.5);
+            border: none;
+            cursor: pointer;
+            width: 40px;
+            padding: 10px;
+            color: black;
+            z-index: 1;
+            transition: background-color 0.8s, color 1s;
+          }
+
+          .buttonss:hover {
+            background-color: white;
+            color: black;
+            outline: none;
+            box-shadow: none;
+            border: none;
+          }
+
+          @media (max-width: 768px) {
+            .banner {
+              height: 350px;
+            }
+          }
+        `}
+      </style>
+
+      <main className="content">
+        <div className="home">
+          <div className="banner">
+            <div className="banner-images">
+              {images.map((img, index) => (
+                <img key={index} src={img} alt={`Slide ${index + 1}`} />
+              ))}
+            </div>
+            <div className="buttonss-container">
+              <button className="buttonss" onClick={prevSlide}>&lt;</button>
+              <button className="buttonss" onClick={nextSlide}>&gt;</button>
+            </div>
           </div>
-          <div className="banner-img"><img src={bannerImg} alt="" style={{ borderRadius: '100px', width: '110%', height: '100%', objectFit: 'cover' }}/></div>
-        </div>
-        <div className="display">
+          <h1 className="absolute items-center content-center flex">Shop by Category</h1>
+          <Cat />
+
           <div className="display-header">
-            <h1>Featured Products</h1>
-            <Link to={FEATURED_PRODUCTS}>See All</Link>
+            <h1>All Products</h1>
+            <Link to={SHOP}>See All</Link>
           </div>
           {(errorFeatured && !isLoadingFeatured) ? (
             <MessageDisplay
@@ -60,32 +151,15 @@ const Home = () => {
               buttonLabel="Try Again"
             />
           ) : (
-            <ProductShowcaseGrid
+            <ProductGrid
               products={featuredProducts}
               skeletonCount={6}
             />
           )}
         </div>
-        <div className="display">
-          <div className="display-header">
-            <h1>Recommended Products</h1>
-            <Link to={RECOMMENDED_PRODUCTS}>See All</Link>
-          </div>
-          {(errorRecommended && !isLoadingRecommended) ? (
-            <MessageDisplay
-              message={errorRecommended}
-              action={fetchRecommendedProducts}
-              buttonLabel="Try Again"
-            />
-          ) : (
-            <ProductShowcaseGrid
-              products={recommendedProducts}
-              skeletonCount={6}
-            />
-          )}
-        </div>
-      </div>
-    </main>
+        
+      </main>
+    </>
   );
 };
 

@@ -1,6 +1,6 @@
 import { ImageLoader } from '@/components/common';
 import { EDIT_PRODUCT } from '@/constants/routes';
-import { displayActionMessage, displayDate, displayMoney } from '@/helpers/utils';
+import { displayActionMessage, displayDate, displayMoney, displayRange } from '@/helpers/utils';
 import PropType from 'prop-types';
 import React, { useRef } from 'react';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
@@ -57,7 +57,7 @@ const ProductItem = ({ product }) => {
             <span>{product.brand || <Skeleton width={50} />}</span>
           </div>
           <div className="grid-col">
-            <span>{product.price ? displayMoney(product.price) : <Skeleton width={30} />}</span>
+            <span>{product.RoundPrice ? displayRange(product.RoundPrice) : <Skeleton width={30} />}</span>
           </div>
           <div className="grid-col">
             <span>

@@ -8,6 +8,11 @@ import * as view from '@/views';
 import AdminRoute from './AdminRoute';
 import ClientRoute from './ClientRoute';
 import PublicRoute from './PublicRoute';
+import Menu from '@/components/Menu/Menu';
+import Sidebar from '@/components/Menu/Sidebar';
+import Bottomnav from '@/components/common/Bottomnav';
+
+
 
 // Revert back to history v4.10.0 because
 // v5.0 breaks navigation
@@ -16,9 +21,12 @@ export const history = createBrowserHistory();
 const AppRouter = () => (
   <Router history={history}>
     <>
+    
       <Navigation />
       <Basket />
+      <Bottomnav />
       <Switch>
+        
         <Route
           component={view.Search}
           exact
@@ -39,6 +47,46 @@ const AppRouter = () => (
           exact
           path={ROUTES.FEATURED_PRODUCTS}
         />
+        <Route
+        component={view.Privacy}
+        exact
+        path={ROUTES.PRIVACY}
+         />
+         <Route
+         component={view.Terms}
+         exact
+         path={ROUTES.TERMS}
+          />
+          <Route
+         component={view.Apple}
+         exact
+         path={ROUTES.APPLE}
+          />
+          <Route
+         component={view.Epic}
+         exact
+         path={ROUTES.EPIC}
+          />
+          <Route
+         component={view.Steam}
+         exact
+         path={ROUTES.STEAM}
+          />
+          <Route
+         component={view.Microsoft}
+         exact
+         path={ROUTES.MICROSOFT}
+          />
+          <Route
+         component={view. Playstation}
+         exact
+         path={ROUTES.PLAYSTATION}
+          />
+           <Route
+         component={view.Netflix}
+         exact
+         path={ROUTES.NETFLIX}
+          />
         <Route
           component={view.RecommendedProducts}
           exact
@@ -110,9 +158,14 @@ const AppRouter = () => (
          />
         <PublicRoute component={view.PageNotFound} />
       </Switch>
-      <Footer />
+      
+     
+      
     </>
+    
+    <Footer />
   </Router>
+  
 );
 
 export default AppRouter;

@@ -20,10 +20,27 @@ export const displayMoney = (n) => {
     style: 'currency',
     currency: 'NPR'
   });
+  
 
   // or use toLocaleString()
   return format.format(n);
 };
+
+export const displayRange = (rangeString) => {
+  // Check if the input is a string
+  if (typeof rangeString !== 'string') {
+    return ''; // Return empty string for invalid inputs
+  }
+
+  // Return 'NPR' followed by the range string
+  return `NPR ${rangeString}`;
+};
+
+
+
+
+
+
 
 export const calculateTotal = (arr) => {
   if (!arr || arr?.length === 0) return 0;

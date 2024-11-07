@@ -17,6 +17,7 @@ const ProductShowcase = ({ products, skeletonCount }) => (
         product={product}
       />
     ))}
+    
   </div>
 );
 

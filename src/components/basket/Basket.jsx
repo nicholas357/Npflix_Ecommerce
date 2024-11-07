@@ -34,7 +34,7 @@ const Basket = () => {
   }, [basket.length]);
 
   const onCheckOut = () => {
-    if ((basket.length !== 0 && user)) {
+    if (basket.length !== 0 && user) {
       document.body.classList.remove('is-basket-open');
       history.push(CHECKOUT_STEP_1);
     } else {
@@ -52,6 +52,10 @@ const Basket = () => {
     if (basket.length !== 0) {
       dispatch(clearBasket());
     }
+  };
+
+  const calculateTotalPrice = () => {
+    return calculateTotal(basket.map((product) => product.selectedPrice * product.quantity));
   };
 
   return user && user.role === 'ADMIN' ? null : (
@@ -121,16 +125,14 @@ const Basket = () => {
               // eslint-disable-next-line react/no-array-index-key
               key={`${product.id}_${i}`}
               product={product}
-              basket={basket}
-              dispatch={dispatch}
             />
           ))}
         </div>
         <div className="basket-checkout">
           <div className="basket-total">
-            <p className="basket-total-title">Subtotal Amout:</p>
+            <p className="basket-total-title">Subtotal Amount:</p>
             <h2 className="basket-total-amount">
-              {displayMoney(calculateTotal(basket.map((product) => product.price * product.quantity)))}
+              {displayMoney(calculateTotalPrice())}
             </h2>
           </div>
           <button

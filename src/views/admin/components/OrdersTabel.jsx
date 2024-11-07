@@ -11,7 +11,7 @@ const OrdersTable = ({ filteredOrders }) => (
           <h5>Payment proof</h5>
         </div>
         <div className="grid-col">
-          <h5>Orders Id</h5>
+          <h5>Orders Name</h5>
         </div>
         <div className="grid-col">
           <h5>full name</h5>

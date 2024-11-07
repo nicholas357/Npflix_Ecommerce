@@ -38,11 +38,15 @@ const FormSchema = Yup.object().shape({
   isDone: Yup.boolean(),
 });
 
-const ShippingDetails = ({ profile, shipping, subtotal }) => {
-  useDocumentTitle('Check Out Step 2 | TOS');
+const ShippingDetails = ({ profile, shipping,  basket }) => {
+  useDocumentTitle('Check Out Step 2 | OTTFLIX');
   useScrollTop();
   const dispatch = useDispatch();
   const history = useHistory();
+
+  const subtotal = basket.reduce((total, product) => {
+    return total + (product.selectedPrice * product.quantity);
+  }, 0);
 
   const initFormikValues = {
     fullname: shipping.fullname || profile.fullname || '',
@@ -51,6 +55,7 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
     mobile: shipping.mobile || profile.mobile || {},
     isInternational: shipping.isInternational || false,
     isDone: shipping.isDone || false,
+    notes: shipping.notes || '',
   };
 
   const onSubmitForm = (form) => {
@@ -61,6 +66,7 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
         address: form.address,
         mobile: form.mobile,
         isInternational: form.isInternational,
+        notes: form.notes,
         isDone: true,
       })
     );
@@ -118,6 +124,7 @@ ShippingDetails.propTypes = {
     fullname: PropType.string,
     email: PropType.string,
     address: PropType.string,
+    notes: PropType.string,
     mobile: PropType.object,
     isInternational: PropType.bool,
     isDone: PropType.bool

@@ -66,7 +66,7 @@ const EsewaPayment = ({ onFileChange }) => {
               htmlFor="modeCredit"
             >
               <div className="d-flex-grow-1 margin-left-s">
-                <h4 className="margin-0">Esewa</h4>
+                <h4 className="margin-0">Esewa/Internet Banking</h4>
                 <span className="text-subtle d-block margin-top-s">
                   Pay easily, fast, and securely with Esewa and Internet banking.
                 </span>

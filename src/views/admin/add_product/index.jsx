@@ -43,7 +43,9 @@ const AddProduct = () => {
             isFeatured: false,
             isRecommended: false,
             availableColors: [],
-            imageCollection: []
+            imageCollection: [],
+            weight: '',
+            descriptions: ''
           }}
         />
       </Suspense>

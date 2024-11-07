@@ -1,7 +1,6 @@
 /* eslint-disable indent */
 import { FilterOutlined, ShoppingOutlined } from '@ant-design/icons';
 import * as ROUTE from '@/constants/routes';
-import logo from '@/images/logo-full.svg';
 import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import {
@@ -15,6 +14,7 @@ import MobileNavigation from './MobileNavigation';
 import SearchBar from './SearchBar';
 
 const Navigation = () => {
+  
   const navbar = useRef(null);
   const { pathname } = useLocation();
 
@@ -44,7 +44,7 @@ const Navigation = () => {
     if (store.isAuthenticating) e.preventDefault();
   };
 
-  // disable the basket toggle to these pathnames
+  // Disable the basket toggle to these pathnames
   const basketDisabledpathnames = [
     ROUTE.CHECKOUT_STEP_1,
     ROUTE.CHECKOUT_STEP_2,
@@ -67,73 +67,85 @@ const Navigation = () => {
     );
   }
   return (
-    <nav className="navigation" ref={navbar}>
-      <div className="logo">
-        <Link onClick={onClickLink} to="/">
-        <img alt="Logo" src={logo} style={{ width: '80px', height: 'auto', marginTop: '10px' }} /><span style={{position: 'absolute', marginTop:'5px'}} >TOS</span>
-        </Link>
-      </div>
-      <ul className="navigation-menu-main">
-        <li><NavLink activeClassName="navigation-menu-active" exact to={ROUTE.HOME}>Home</NavLink></li>
-        <li><NavLink activeClassName="navigation-menu-active" to={ROUTE.SHOP}>Shop</NavLink></li>
-        <li><NavLink activeClassName="navigation-menu-active" to={ROUTE.FEATURED_PRODUCTS}>Featured</NavLink></li>
-        <li><NavLink activeClassName="navigation-menu-active" to={ROUTE.RECOMMENDED_PRODUCTS}>Recommended</NavLink></li>
-      </ul>
-      {(pathname === ROUTE.SHOP || pathname === ROUTE.SEARCH) && (
-        <FiltersToggle>
-          <button className="button-muted button-small" type="button">
-            Filters &nbsp;
-            <FilterOutlined />
-          </button>
-        </FiltersToggle>
-      )}
-      <SearchBar />
-      <ul className="navigation-menu">
-        <li className="navigation-menu-item">
-          <BasketToggle>
-            {({ onClickToggle }) => (
-              <button
-                className="button-link navigation-menu-link basket-toggle"
-                disabled={basketDisabledpathnames.includes(pathname)}
-                onClick={onClickToggle}
-                type="button"
-              >
-
-                <Badge count={store.basketLength}>
-                <ShoppingOutlined style={{ fontSize: '2.4rem' }} />
-                </Badge>
-              </button>
-            )}
-          </BasketToggle>
-        </li>
-        {store.user ? (
-          <li className="navigation-menu-item">
-            <UserAvatar />
-          </li>
-        ) : (
-          <li className="navigation-action">
-            {pathname !== ROUTE.SIGNUP && (
-              <Link
-                className="button button-small"
-                onClick={onClickLink}
-                to={ROUTE.SIGNUP}
-              >
-                Sign Up
-              </Link>
-            )}
-            {pathname !== ROUTE.SIGNIN && (
-              <Link
-                className="button button-small button-muted margin-left-s"
-                onClick={onClickLink}
-                to={ROUTE.SIGNIN}
-              >
-                Sign In
-              </Link>
-            )}
-          </li>
+    <>
+      <nav className="navigation" ref={navbar}>
+        <div className="logo">
+          <Link onClick={onClickLink} to="/">
+            <div style={{ 
+              width: '300px', // Adjust the width as necessary
+              height: '80px', // Maintain a consistent height
+              display: 'flex', 
+              justifyContent: 'center', 
+              alignItems: 'center', 
+              overflow: 'hidden', 
+              marginBottom: '10px' // Prevent overflow
+            }}>
+              <img 
+                alt="Logo" 
+                src="https://i.imgur.com/z2N5T9h.png" // Make sure this image is high-resolution
+                style={{ 
+                  height: '300%', // Set to 100% to fill the height of the container
+                  width: 'auto', // Maintain aspect ratio
+                  maxWidth: '400%', // Optional: Allow the logo to grow larger than its container
+                  objectFit: 'contain' // Ensure it fits within the bounds without distortion
+                }} 
+              />
+            </div>
+          </Link>
+        </div>
+        
+        <ul className="navigation-menu-main">
+          <li><NavLink activeClassName="navigation-menu-active" exact to={ROUTE.HOME}>Home</NavLink></li>
+          <li><NavLink activeClassName="navigation-menu-active" to={ROUTE.SHOP}>Shop</NavLink></li>
+        </ul>
+        
+        {(pathname === ROUTE.SHOP || pathname === ROUTE.SEARCH) && (
+          <FiltersToggle>
+            <button className="button-muted button-small" type="button">
+              Filters &nbsp;
+              <FilterOutlined />
+            </button>
+          </FiltersToggle>
         )}
-      </ul>
-    </nav>
+        
+        <SearchBar />
+        <ul className="navigation-menu">
+          <li className="navigation-menu-item">
+            <BasketToggle>
+              {({ onClickToggle }) => (
+                <button
+                  className="button-link navigation-menu-link basket-toggle"
+                  disabled={basketDisabledpathnames.includes(pathname)}
+                  onClick={onClickToggle}
+                  type="button"
+                >
+                  <Badge count={store.basketLength}>
+                    <ShoppingOutlined style={{ fontSize: '2.4rem' }} />
+                  </Badge>
+                </button>
+              )}
+            </BasketToggle>
+          </li>
+          {store.user ? (
+            <li className="navigation-menu-item">
+              <UserAvatar />
+            </li>
+          ) : (
+            <li className="navigation-action">
+              {pathname !== ROUTE.SIGNIN && (
+                <Link
+                  className="button button-small button-muted margin-left-s"
+                  onClick={onClickLink}
+                  to={ROUTE.SIGNIN}
+                >
+                  Sign In
+                </Link>
+              )}
+            </li>
+          )}
+        </ul>
+      </nav>
+    </>
   );
 };
 

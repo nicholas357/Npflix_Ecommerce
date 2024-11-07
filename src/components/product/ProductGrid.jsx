@@ -7,7 +7,8 @@ const ProductGrid = ({ products }) => {
   const { addToBasket, isItemOnBasket } = useBasket();
 
   return (
-    <div className="product-grid">
+    <div className="product-grid ">
+      
       {products.length === 0 ? new Array(12).fill({}).map((product, index) => (
         <ProductItem
           // eslint-disable-next-line react/no-array-index-key
@@ -22,6 +23,7 @@ const ProductGrid = ({ products }) => {
           product={product}
         />
       ))}
+      
     </div>
   );
 };

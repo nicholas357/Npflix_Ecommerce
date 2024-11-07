@@ -1,0 +1,13 @@
+/* main.css */
+
+/* Import Tailwind first */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+
+
+/* Custom overrides for specific tags */
+h1, h2, h3, h4, h5, h6, .footer-logo,  p, span, strong, em, ul, ol, li {
+    all: revert; /* Resets all styles applied by Tailwind */
+}

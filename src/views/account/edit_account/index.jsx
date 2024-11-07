@@ -31,7 +31,7 @@ const FormSchema = Yup.object().shape({
 });
 
 const EditProfile = () => {
-  useDocumentTitle('Edit Account | TOS');
+  useDocumentTitle('Edit Account | OTTFLIX');
   useScrollTop();
 
   const modal = useModal();

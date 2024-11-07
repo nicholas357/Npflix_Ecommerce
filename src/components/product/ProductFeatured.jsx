@@ -14,6 +14,7 @@ const ProductFeatured = ({ product }) => {
 
   return (
     <SkeletonTheme color="#e1e1e1" highlightColor="#f2f2f2">
+      
       <div className="product-display" onClick={onClickItem} role="presentation">
         <div className="product-display-img">
           {product.image ? (

@@ -17,7 +17,7 @@ const Loader = () => (
 
 const UserAccount = () => {
   useScrollTop();
-  useDocumentTitle('My Account | TOS');
+  useDocumentTitle('My Account | OTTFLIX');
 
   return (
     <UserTab>
@@ -26,7 +26,7 @@ const UserAccount = () => {
           <UserAccountTab />
         </Suspense>
       </div>
-      <div index={1} label="My Wish List">
+      <div index={1} label="My History">
         <Suspense fallback={<Loader />}>
           <UserWishListTab />
         </Suspense>

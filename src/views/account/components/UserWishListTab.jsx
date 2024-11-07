@@ -46,7 +46,7 @@ const UserWishListTab = () => {
 
   return (
     <div className="user-wishlist" style={{minHeight: '80vh'}}>
-      <h3>WishList </h3>
+      <h3>History </h3>
       {basketItems.length > 0 ? (
         <div className="basket-items-container">
           {basketItems.map(item => (
@@ -55,8 +55,8 @@ const UserWishListTab = () => {
         </div>
       ) : (
         <div className='loader' style={{minHeight: '80vh'}}>
-        <h3>My Wish List</h3>
-    <strong><span className="text-subtle">You don&apos;t have a wish list</span></strong></div>
+        <h3>My History</h3>
+    <strong><span className="text-subtle">You don&apos;t have a basket history</span></strong></div>
       )}
     </div>
   );

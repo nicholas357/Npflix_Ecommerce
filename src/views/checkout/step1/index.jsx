@@ -3,18 +3,24 @@ import { BasketItem } from '@/components/basket';
 import { CHECKOUT_STEP_2 } from '@/constants/routes';
 import { displayMoney } from '@/helpers/utils';
 import { useDocumentTitle, useScrollTop } from '@/hooks';
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { StepTracker } from '../components';
 import withCheckout from '../hoc/withCheckout';
 
-const OrderSummary = ({ basket, subtotal }) => {
-  useDocumentTitle('Check Out Step 1 | TOS');
+const OrderSummary = ({ basket }) => {
+  useDocumentTitle('Check Out Step 1 | OTTFLIX');
   useScrollTop();
   const dispatch = useDispatch();
   const history = useHistory();
+
+  // Calculate subtotal
+  const subtotal = basket.reduce((total, product) => {
+    return total + (product.selectedPrice * product.quantity);
+  }, 0);
+
   const onClickPrevious = () => history.push('/');
   const onClickNext = () => history.push(CHECKOUT_STEP_2);
 
@@ -28,10 +34,8 @@ const OrderSummary = ({ basket, subtotal }) => {
         <div className="checkout-items">
           {basket.map((product) => (
             <BasketItem
-              basket={basket}
-              dispatch={dispatch}
               key={product.id}
-              product={product}
+              product={product} // Pass the entire product object
             />
           ))}
         </div>
@@ -67,8 +71,17 @@ const OrderSummary = ({ basket, subtotal }) => {
 };
 
 OrderSummary.propTypes = {
-  basket: PropType.arrayOf(PropType.object).isRequired,
-  subtotal: PropType.number.isRequired
+  basket: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    selectedSize: PropTypes.string.isRequired,
+    selectedColor: PropTypes.string.isRequired,
+    selectedWeight: PropTypes.string.isRequired,
+    selectedPrice: PropTypes.number.isRequired,
+    quantity: PropTypes.number.isRequired,
+    image: PropTypes.string.isRequired,
+    // Include other properties as needed
+  })).isRequired,
 };
 
 export default withCheckout(OrderSummary);

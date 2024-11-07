@@ -3,9 +3,10 @@ import { ProductShowcaseGrid } from '@/components/product';
 import { useDocumentTitle, useRecommendedProducts, useScrollTop } from '@/hooks';
 import bannerImg from '@/images/banner-girl.png';
 import React from 'react';
+import { ProductGrid } from '@/components/product';
 
 const RecommendedProducts = () => {
-  useDocumentTitle('Recommended Products | TOS');
+  useDocumentTitle('| TOS');
   useScrollTop();
 
   const {
@@ -22,9 +23,7 @@ const RecommendedProducts = () => {
           <div className="banner-desc">
             <h1>Recommended Products</h1>
           </div>
-          <div className="banner-img">
-          <img src={bannerImg} alt='' />
-          </div>
+         
         </div>
         <div className="display">
           <div className="product-display-grid">
@@ -35,7 +34,7 @@ const RecommendedProducts = () => {
                 buttonLabel="Try Again"
               />
             ) : (
-              <ProductShowcaseGrid
+              <ProductGrid
                 products={recommendedProducts}
                 skeletonCount={6}
               />

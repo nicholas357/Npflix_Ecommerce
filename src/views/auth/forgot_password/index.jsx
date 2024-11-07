@@ -13,16 +13,17 @@ const ForgotPassword = () => {
   const didMount = useDidMount();
   const [forgotPWStatus, setForgotPWStatus] = useState({});
   const [isSendingForgotPWRequest, setIsSending] = useState(false);
-  const [field, setField] = useState({});
+  const [field, setField] = useState({ email: '', error: '' });
 
   useScrollTop();
   useDocumentTitle('Forgot Password | TOS');
+
   useEffect(() => {
     if (didMount) {
       setForgotPWStatus(authStatus);
       setIsSending(isAuthenticating);
     }
-  }, [authStatus, isAuthenticating]);
+  }, [authStatus, isAuthenticating, didMount]);
 
   const onEmailChange = (value, error) => {
     setField({ email: value, error });
@@ -45,12 +46,11 @@ const ForgotPassword = () => {
       <p>Enter your email address and we will send you a password reset email.</p>
       <br />
       <input
-        field="email"
+        value={field.email}
         required
         className="input-form"
-        label="* Email"
         maxLength={40}
-        onChange={onEmailChange}
+        onChange={(e) => onEmailChange(e.target.value, '')} // You can add your validation logic here
         placeholder="Enter your email"
         readOnly={isSendingForgotPWRequest || authStatus?.success}
         type="email"

@@ -19,4 +19,12 @@ export { default as RecommendedProducts } from './recommended';
 export { default as Search } from './search';
 export { default as Shop } from './shop';
 export { default as ViewProduct } from './view_product';
+export {default as Privacy} from './privacy-policy'
+export {default as Terms} from './terms'
+export {default as Netflix} from './Netflix'
+export {default as Apple} from './Apple'
+export {default as Epic} from './Epic'
+export {default as Steam} from './Steam'
+export {default as Microsoft} from './Microsoft'
+export {default as Playstation} from './Playstation'
 

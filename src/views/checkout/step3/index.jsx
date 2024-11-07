@@ -20,14 +20,19 @@ const FormSchema = Yup.object().shape({
   type: Yup.string().required('Please select payment mode')
 });
 
-const Payment = ({ shipping, payment, subtotal }) => {
-  useDocumentTitle('Check Out Final Step | TOS');
+const Payment = ({ shipping, payment, basket }) => {
+  useDocumentTitle('Check Out Final Step | OTTFLIX');
   useScrollTop();
   const [file, setFile] = useState(null);
 
   const handleFileChange = (selectedFile) => {
     setFile(selectedFile);
   };
+
+  // Calculate subtotal based on basket items
+  const subtotal = basket.reduce((total, product) => {
+    return total + (product.selectedPrice * product.quantity);
+  }, 0);
 
   const initFormikValues = {
     name: payment.name || '',
@@ -52,23 +57,23 @@ const Payment = ({ shipping, payment, subtotal }) => {
         initialValues={initFormikValues}
         validateOnChange
         validationSchema={FormSchema}
-        validate={(form) => {
-          if (form.type === 'paypal') {
-            displayActionMessage('Feature not ready yet :)', 'info');
-          }
-        }}
         onSubmit={onConfirm}
       >
-        {() => (
+        {({ values, errors, touched }) => (
           <Form className="checkout-step-3">
             <EsewaPayment onFileChange={handleFileChange} />
-            <PayPalPayment />
+           
             <Total
               isInternational={shipping.isInternational}
               subtotal={subtotal}
               shipping={shipping}
               file={file}
+              basket={basket} // Pass basket to Total component for product names
             />
+            {errors.type && touched.type && (
+              <div className="error-message">{errors.type}</div>
+            )}
+            {/* Add more error message display logic for other fields if needed */}
           </Form>
         )}
       </Formik>
@@ -88,7 +93,11 @@ Payment.propTypes = {
     ccv: PropTypes.string,
     type: PropTypes.string
   }).isRequired,
-  subtotal: PropTypes.number.isRequired
+  basket: PropTypes.arrayOf(PropTypes.shape({
+    selectedPrice: PropTypes.number,
+    quantity: PropTypes.number
+    // Add more product props as needed
+  })).isRequired
 };
 
 export default withCheckout(Payment);

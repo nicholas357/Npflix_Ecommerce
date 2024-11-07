@@ -1,13 +1,15 @@
 import { CheckOutlined } from '@ant-design/icons';
 import { ImageLoader } from '@/components/common';
-import { displayMoney } from '@/helpers/utils';
-import PropType from 'prop-types';
-import React from 'react';
+import { displayMoney, displayRange } from '@/helpers/utils';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import { useHistory } from 'react-router-dom';
+import { displayActionMessage } from '@/helpers/utils';
 
 const ProductItem = ({ product, isItemOnBasket, addToBasket }) => {
   const history = useHistory();
+  const [error, setError] = useState('');
 
   const onClickItem = () => {
     if (!product) return;
@@ -20,11 +22,21 @@ const ProductItem = ({ product, isItemOnBasket, addToBasket }) => {
   const itemOnBasket = isItemOnBasket ? isItemOnBasket(product.id) : false;
 
   const handleAddToBasket = () => {
+    // Always set the error message without checking any conditions
+    if (!product.sizes || product.sizes.length === 0 || !product.price) {
+      displayActionMessage("Please select a size and ensure the price is available");
+      return;
+    }
+    
+    
     if (addToBasket) addToBasket({ ...product, selectedSize: product.sizes[0] });
+
+    // No further action needed for adding to basket
   };
 
   return (
     <SkeletonTheme color="#e1e1e1" highlightColor="#f2f2f2">
+      
       <div
         className={`product-card ${!product.id ? 'product-loading' : ''}`}
         style={{
@@ -55,20 +67,22 @@ const ProductItem = ({ product, isItemOnBasket, addToBasket }) => {
               {product.brand || <Skeleton width={60} />}
             </p>
             <h4 className="product-card-price">
-              {product.price ? displayMoney(product.price) : <Skeleton width={40} />}
+              {product.price ? displayMoney(product.price) : displayRange(product.RoundPrice) || <Skeleton width={40} />}
             </h4>
           </div>
         </div>
         {product.id && (
-          <button
-            className={`product-card-button button-small button button-block ${itemOnBasket ? 'button-border button-border-gray' : ''}`}
-            onClick={handleAddToBasket}
-            type="button"
-          >
-            {itemOnBasket ? 'Remove from basket' : 'Add to basket'}
-          </button>
+          <div>
+            <button
+              className={`product-card-button button-small button button-block ${itemOnBasket ? 'button-border button-border-gray' : ''}`}
+              onClick={handleAddToBasket}
+              type="button"
+            >
+              {itemOnBasket ? 'Remove from basket' : 'Add to basket'}
+            </button>
+            {error && <p className="error-message">{error}</p>}
+          </div>
         )}
-
       </div>
     </SkeletonTheme>
   );
@@ -80,10 +94,9 @@ ProductItem.defaultProps = {
 };
 
 ProductItem.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  product: PropType.object.isRequired,
-  isItemOnBasket: PropType.func,
-  addToBasket: PropType.func
+  product: PropTypes.object.isRequired,
+  isItemOnBasket: PropTypes.func,
+  addToBasket: PropTypes.func
 };
 
 export default ProductItem;

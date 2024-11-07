@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import { CheckOutlined, LoadingOutlined } from '@ant-design/icons';
 import { ImageLoader } from '@/components/common';
 import {
@@ -8,16 +7,18 @@ import {
   Field, FieldArray, Form, Formik
 } from 'formik';
 import { useFileHandler } from '@/hooks';
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import React from 'react';
 import * as Yup from 'yup';
 
-// Default brand names that I used. You can use what you want
 const brandOptions = [
-  { value: 'Digital', label: 'Digital' },
-  { value: 'Furniture', label: 'Furniture' },
-  { value: 'Clothing', label: 'Clothing' },
-  { value: 'Shopping', label: 'Shopping' }
+  { value: 'netflix', label: 'Netflix' },
+  { value: 'spotify', label: 'Spotify' },
+  { value: 'giftcards', label: 'GiftCards' },
+  { value: 'topups', label: 'TopUps' },
+  { value: 'softwares', label: 'Softwares' },
+  { value: 'subscriptions', label: 'Subscriptions' },
+  { value: 'Others', label: 'Others' },
 ];
 
 const FormSchema = Yup.object().shape({
@@ -26,10 +27,6 @@ const FormSchema = Yup.object().shape({
     .max(60, 'Product name must only be less than 60 characters.'),
   brand: Yup.string()
     .required('Brand name is required.'),
-  price: Yup.number()
-    .positive('Price is invalid.')
-    .integer('Price should be an integer.')
-    .required('Price is required.'),
   description: Yup.string()
     .required('Description is required.'),
   maxQuantity: Yup.number()
@@ -39,28 +36,48 @@ const FormSchema = Yup.object().shape({
   keywords: Yup.array()
     .of(Yup.string())
     .min(1, 'Please enter at least 1 keyword for this product.'),
-  sizes: Yup.array()
-    .of(Yup.number())
-    .min(1, 'Please enter a size for this product.'),
   isFeatured: Yup.boolean(),
   isRecommended: Yup.boolean(),
   availableColors: Yup.array()
     .of(Yup.string().required())
-    .min(1, 'Please add a default color for this product.')
+    .min(1, 'Please add a default color for this product.'),
+  sizePrices: Yup.array()
+    .of(
+      Yup.object().shape({
+        size: Yup.string().required('Size is required.'),
+        price: Yup.number()
+          .positive('Price is invalid.')
+          .integer('Price should be an integer.')
+          .required('Price is required.'),
+        weights: Yup.array().of(
+          Yup.object().shape({
+            weight: Yup.string().required('Weight is required.'),
+            price: Yup.number()
+              .positive('Price is invalid.')
+              .integer('Price should be an integer.')
+              .required('Price is required.')
+          })
+        ).min(1, 'At least one weight is required.')
+      })
+    )
+    .min(1, 'Please enter a size, price, and at least one weight for this product.'), // Adjusted validation message
+  image: Yup.string(), // Adjust validation as needed
+  imageCollection: Yup.array(), // Adjust validation as needed
 });
 
 const ProductForm = ({ product, onSubmit, isLoading }) => {
   const initFormikValues = {
     name: product?.name || '',
     brand: product?.brand || '',
-    price: product?.price || 0,
-    maxQuantity: product?.maxQuantity || 0,
     description: product?.description || '',
+    maxQuantity: product?.maxQuantity || 0,
+    RoundPrice: product?.RoundPrice,
     keywords: product?.keywords || [],
-    sizes: product?.sizes || [],
     isFeatured: product?.isFeatured || false,
     isRecommended: product?.isRecommended || false,
-    availableColors: product?.availableColors || []
+    availableColors: product?.availableColors || [],
+    sizePrices: product?.sizePrices || [{ size: '', price: 0, weights: [{ weight: '', price: 0 }] }],
+    descriptions: product?.descriptions || '', // Initial sizePrices with weights
   };
 
   const {
@@ -75,15 +92,12 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
       onSubmit({
         ...form,
         quantity: 1,
-        // due to firebase function billing policy, let's add lowercase version
-        // of name here instead in firebase functions
         name_lower: form.name.toLowerCase(),
         dateAdded: new Date().getTime(),
         image: imageFile?.image?.file || product.imageUrl,
         imageCollection: imageFile.imageCollection
       });
     } else {
-      // eslint-disable-next-line no-alert
       alert('Product thumbnail image is required.');
     }
   };
@@ -106,7 +120,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                     name="name"
                     type="text"
                     label="* Product Name"
-                    placeholder="Gago"
+                    placeholder="Product Name"
                     style={{ textTransform: 'capitalize' }}
                     component={CustomInput}
                   />
@@ -116,7 +130,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                   <CustomCreatableSelect
                     defaultValue={{ label: values.brand, value: values.brand }}
                     name="brand"
-                    iid="brand"
+                    id="brand"
                     options={brandOptions}
                     disabled={isLoading}
                     placeholder="Select/Create Brand"
@@ -134,52 +148,47 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                   component={CustomTextarea}
                 />
               </div>
-              <div className="d-flex">
-                <div className="product-form-field">
-                  <Field
-                    disabled={isLoading}
-                    name="price"
-                    id="price"
-                    type="number"
-                    label="* Price"
-                    component={CustomInput}
-                  />
+              <div className="product-form-field">
+                <Field
+                  disabled={isLoading}
+                  name="descriptions"
+                  id="descriptions"
+                  rows={3}
+                  label="* Additional Description"
+                  component={CustomTextarea}
+                />
+              </div>
+              <div className="product-form-field">
+                <Field
+                  disabled={isLoading}
+                  name="maxQuantity"
+                  type="number"
+                  id="maxQuantity"
+                  label="* Max Quantity"
+                  component={CustomInput}
+                />
                 </div>
-                &nbsp;
                 <div className="product-form-field">
-                  <Field
-                    disabled={isLoading}
-                    name="maxQuantity"
-                    type="number"
-                    id="maxQuantity"
-                    label="* Max Quantity"
-                    component={CustomInput}
-                  />
-                </div>
+                <Field
+                  disabled={isLoading}
+                  name="RoundPrice"
+                  type="text"
+                  id="RoundPrice"
+                  label="* Round Price"
+                  component={CustomInput}
+                />
+                
               </div>
               <div className="d-flex">
                 <div className="product-form-field">
                   <CustomCreatableSelect
                     defaultValue={values.keywords.map((key) => ({ value: key, label: key }))}
                     name="keywords"
-                    iid="keywords"
+                    id="keywords"
                     isMulti
                     disabled={isLoading}
                     placeholder="Create/Select Keywords"
                     label="* Keywords"
-                  />
-                </div>
-                &nbsp;
-                <div className="product-form-field">
-                  <CustomCreatableSelect
-                    defaultValue={values.keywords.map((key) => ({ value: key, label: key }))}
-                    name="sizes"
-                    iid="sizes"
-                    type="number"
-                    isMulti
-                    disabled={isLoading}
-                    placeholder="Create/Select Sizes"
-                    label="* Sizes (Screen)"
                   />
                 </div>
               </div>
@@ -188,6 +197,109 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                   name="availableColors"
                   disabled={isLoading}
                   component={CustomColorInput}
+                />
+              </div>
+              <div className="product-form-field">
+                <span className="d-block padding-s">* Sizes with Prices and Weights</span>
+                <FieldArray
+                  name="sizePrices"
+                  render={(arrayHelpers) => (
+                    <div>
+                      {values.sizePrices.map((sizePrice, index) => (
+                        <div key={index}>
+                          <div className="d-flex align-items-center">
+                            <div className="product-form-field">
+                              <Field
+                                name={`sizePrices[${index}].size`}
+                                placeholder="Size"
+                                component={CustomInput}
+                                disabled={isLoading}
+                              />
+                            </div>
+                            &nbsp;
+                            <div className="product-form-field">
+                              <Field
+                                name={`sizePrices[${index}].price`}
+                                placeholder="Price"
+                                type="number"
+                                component={CustomInput}
+                                disabled={isLoading}
+                              />
+                            </div>
+                            &nbsp;
+                            <button
+                              type="button"
+                              className="button"
+                              onClick={() => arrayHelpers.remove(index)}
+                              disabled={isLoading}
+                            >
+                              Remove Size
+                            </button>
+                          </div>
+                          <div className="product-form-field">
+                            <span className="d-block padding-s">Weights</span>
+                            <FieldArray
+                              name={`sizePrices[${index}].weights`}
+                              render={(weightArrayHelpers) => (
+                                <div>
+                                  {sizePrice.weights.map((weight, weightIndex) => (
+                                    <div key={weightIndex} className="d-flex align-items-center">
+                                      <div className="product-form-field">
+                                        <Field
+                                          name={`sizePrices[${index}].weights[${weightIndex}].weight`}
+                                          placeholder="Weight"
+                                          type="text"
+                                          component={CustomInput}
+                                          disabled={isLoading}
+                                        />
+                                      </div>
+                                      &nbsp;
+                                      <div className="product-form-field">
+                                        <Field
+                                          name={`sizePrices[${index}].weights[${weightIndex}].price`}
+                                          placeholder="Price"
+                                          type="number"
+                                          component={CustomInput}
+                                          disabled={isLoading}
+                                        />
+                                      </div>
+                                      &nbsp;
+                                      <button
+                                        type="button"
+                                        className="button"
+                                        onClick={() => weightArrayHelpers.remove(weightIndex)}
+                                        disabled={isLoading}
+                                      >
+                                        Remove Duration
+                                      </button>
+                                    </div>
+                                  ))}
+                                  <br />
+                                  <button
+                                    type="button"
+                                    className="button"
+                                    onClick={() => weightArrayHelpers.push({ weight: '', price: 0 })}
+                                    disabled={isLoading}
+                                  >
+                                    Add Duration
+                                  </button>
+                                </div>
+                              )}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                      <br />
+                      <button
+                        type="button"
+                        className="button"
+                        onClick={() => arrayHelpers.push({ size: '', price: 0, weights: [{ weight: '', price: 0 }] })}
+                        disabled={isLoading}
+                      >
+                        Add Size with Price and Duration
+                      </button>
+                    </div>
+                  )}
                 />
               </div>
               <div className="product-form-field">
@@ -264,8 +376,6 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                 </div>
               </div>
               <br />
-              <br />
-              <br />
               <div className="product-form-field product-form-submit">
                 <button
                   className="button"
@@ -278,7 +388,6 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                 </button>
               </div>
             </div>
-            {/* ----THUBMNAIL ---- */}
             <div className="product-form-file">
               <div className="product-form-field">
                 <span className="d-block padding-s">* Thumbnail</span>
@@ -314,23 +423,33 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
 };
 
 ProductForm.propTypes = {
-  product: PropType.shape({
-    name: PropType.string,
-    brand: PropType.string,
-    price: PropType.number,
-    maxQuantity: PropType.number,
-    description: PropType.string,
-    keywords: PropType.arrayOf(PropType.string),
-    imageCollection: PropType.arrayOf(PropType.object),
-    sizes: PropType.arrayOf(PropType.string),
-    image: PropType.string,
-    imageUrl: PropType.string,
-    isFeatured: PropType.bool,
-    isRecommended: PropType.bool,
-    availableColors: PropType.arrayOf(PropType.string)
+  product: PropTypes.shape({
+    name: PropTypes.string,
+    brand: PropTypes.string,
+    description: PropTypes.string,
+    descriptions: PropTypes.string,
+    maxQuantity: PropTypes.number,
+    RoundPrice: PropTypes.string,
+    keywords: PropTypes.arrayOf(PropTypes.string),
+    isFeatured: PropTypes.bool,
+    isRecommended: PropTypes.bool,
+    availableColors: PropTypes.arrayOf(PropTypes.string),
+    sizePrices: PropTypes.arrayOf(
+      PropTypes.shape({
+        size: PropTypes.string,
+        price: PropTypes.number,
+        weights: PropTypes.arrayOf(
+          PropTypes.shape({
+            weight: PropTypes.string,
+            price: PropTypes.number
+          })
+        )
+      })
+    ),
+    imageCollection: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
-  onSubmit: PropType.func.isRequired,
-  isLoading: PropType.bool.isRequired
+  onSubmit: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired
 };
 
 export default ProductForm;
